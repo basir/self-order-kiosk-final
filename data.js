@@ -1,0 +1,83 @@
+const data = {
+  categories: [
+    { id: '1', name: 'Beverages', image: '/images/beverages.jpg' },
+    { id: '2', name: 'Breakfast', image: '/images/breakfast.jpg' },
+    { id: '3', name: 'Burgers', image: '/images/burgers.jpg' },
+  ],
+  products: [
+    {
+      id: '1',
+      categrory: 'Beverages',
+      name: 'Coca-Cola',
+      calorie: 120,
+      price: 1,
+      image: '/images/t-mcdonalds-Coca-Cola-Classic-Small.jpg',
+    },
+    {
+      id: '2',
+      categrory: 'Beverages',
+      name: 'Vanill Shake',
+      price: 1.5,
+      calorie: 360,
+      image: '/images/t-mcdonalds-Vanilla-McCafe-Shake-Medium.jpg',
+    },
+    {
+      id: '3',
+      categrory: 'Beverages',
+      name: 'Hot Chocolate',
+      price: 2,
+      calorie: 170,
+      image: '/images/t-mcdonalds-McCafe-Hot-Chocolate-Medium.jpg',
+    },
+    {
+      id: '4',
+      categrory: 'Breakfast',
+      name: 'Bacon & Biscuit',
+      price: 1.9,
+      calorie: 90,
+      image:
+        '/images/t-mcdonalds-Bacon-Egg-Cheese-Biscuit-Regular-Size-Biscuit.jpg',
+    },
+    {
+      id: '5',
+      categrory: 'Breakfast',
+      name: 'Blueberry Muffin',
+      price: 1.5,
+      calorie: 120,
+      image: '/images/t-blueberry-muffin.jpg',
+    },
+    {
+      id: '6',
+      categrory: 'Breakfast',
+      name: 'Big Breakfast',
+      price: 3,
+      calorie: 430,
+      image: '/images/s-mcdonalds-Big-Breakfast-Regular-Size-Biscuit.jpg',
+    },
+    {
+      id: '7',
+      categrory: 'Burgers',
+      name: 'Big Mac',
+      price: 1.9,
+      calorie: 200,
+      image: '/images/t-mcdonalds-Big-Mac.jpg',
+    },
+    {
+      id: '8',
+      categrory: 'Burgers',
+      name: 'Hamburger',
+      price: 1.5,
+      calorie: 410,
+      image: '/images/t-mcdonalds-Hamburger.jpg',
+    },
+    {
+      id: '9',
+      categrory: 'Burgers',
+      name: 'McDouble',
+      price: 3,
+      calorie: 320,
+      image: '/images/t-mcdonalds-McDouble.jpg',
+    },
+  ],
+};
+module.exports = data;
