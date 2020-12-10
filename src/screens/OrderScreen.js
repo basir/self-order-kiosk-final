@@ -24,11 +24,9 @@ import {
   Slide,
   TextField,
   Typography,
-  Zoom,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { useParams } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 import { useStyles } from '../styles';
 import Logo from '../components/Logo';
@@ -41,13 +39,15 @@ export default function OrderScreen(props) {
     loading: loadingProducts,
     error: errorProducts,
   } = state.productList;
-  const { orderItems } = state.order;
-  const itemsCount = orderItems.reduce((a, c) => a + c.quantity, 0);
-  const itemsPrice = orderItems.reduce((a, c) => a + c.quantity * c.price, 0);
-  const taxPrice = Math.round(0.15 * itemsPrice * 100) / 100;
+  const {
+    orderItems,
+    itemsCount,
+    totalPrice,
+    taxPrice,
+    orderType,
+  } = state.order;
 
-  const totalPrice = Math.round((itemsPrice + taxPrice) * 100) / 100;
-  const { categoryName, orderType } = useParams();
+  const [categoryName, setCategoryName] = useState('');
 
   const [quantity, setQuantity] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -68,8 +68,7 @@ export default function OrderScreen(props) {
     setIsOpen(false);
   };
   const previewOrderHandler = () => {
-    props.history.push(`/review/${orderType}`);
-    // previewOrder(dispatch);
+    props.history.push(`/review`);
   };
   useEffect(() => {
     if (!categories) {
@@ -79,6 +78,11 @@ export default function OrderScreen(props) {
     }
   }, [categories, categoryName]);
 
+  const categoryClickHandler = (name) => {
+    setCategoryName(name);
+    listProducts(dispatch, categoryName);
+  };
+
   return (
     <Box className={styles.root}>
       <Box className={styles.main}>
@@ -86,7 +90,6 @@ export default function OrderScreen(props) {
           onClose={closeHandler}
           aria-labelledby="max-width-dialog-title"
           open={isOpen}
-          transition={Slide}
           fullWidth={true}
           maxWidth="sm"
         >
@@ -126,7 +129,7 @@ export default function OrderScreen(props) {
               size="large"
               className={styles.largeButton}
             >
-              {orderItems.find((x) => x.id === product.id)
+              {orderItems.find((x) => x.name === product.name)
                 ? 'Remove From Order'
                 : 'Cancel'}
             </Button>
@@ -152,22 +155,14 @@ export default function OrderScreen(props) {
                 <Alert severity="error">{error}</Alert>
               ) : (
                 <>
-                  <ListItem
-                    button
-                    onClick={() => {
-                      props.history.push(`/order/${orderType} `);
-                    }}
-                  >
+                  <ListItem button onClick={() => categoryClickHandler('')}>
                     <Logo></Logo>
                   </ListItem>
                   {categories.map((category) => (
                     <ListItem
+                      key={category.name}
                       button
-                      onClick={() => {
-                        props.history.push(
-                          `/order/${orderType}/${category.name}`
-                        );
-                      }}
+                      onClick={() => categoryClickHandler(category.name)}
                     >
                       <Avatar alt={category.name} src={category.image} />
                     </ListItem>
@@ -193,8 +188,8 @@ export default function OrderScreen(props) {
                 <Alert severity="error">{errorProducts}</Alert>
               ) : (
                 products.map((product) => (
-                  <Slide direction="up" in={true}>
-                    <Grid item md={6} key={product.name}>
+                  <Slide key={product.name} direction="up" in={true}>
+                    <Grid item md={6}>
                       <Card
                         className={styles.card}
                         onClick={() => productClickHandler(product)}
@@ -245,8 +240,8 @@ export default function OrderScreen(props) {
       <Box>
         <Box>
           <Box className={[styles.bordered, styles.space]}>
-            My Order - {orderType === 'takeout' ? 'Take out' : 'Eat in'} | Tax:
-            ${taxPrice} | Total: ${totalPrice} | Items: {itemsCount}
+            My Order - {orderType} | Tax: ${taxPrice} | Total: ${totalPrice} |
+            Items: {itemsCount}
           </Box>
           <Box className={[styles.row, styles.around]}>
             <Button

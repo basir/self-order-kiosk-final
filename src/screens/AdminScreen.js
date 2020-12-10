@@ -100,7 +100,7 @@ export default function ReviewScreen(props) {
               size="large"
               className={styles.largeButton}
             >
-              {orderItems.find((x) => x.id === product.id)
+              {orderItems.find((x) => x.name === product.name)
                 ? 'Remove From Order'
                 : 'Cancel'}
             </Button>
@@ -181,7 +181,7 @@ export default function ReviewScreen(props) {
           <Box className={[styles.row, styles.around]}>
             <Button
               onClick={() => {
-                props.history.push(`/order/${orderType}`);
+                props.history.push(`/order`);
               }}
               variant="contained"
               color="primary"

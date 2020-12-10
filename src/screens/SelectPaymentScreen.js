@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import {
   Box,
@@ -10,8 +10,19 @@ import {
 } from '@material-ui/core';
 import { useStyles } from '../styles';
 import Logo from '../components/Logo';
+import { setPaymentType } from '../actions';
+import { Store } from '../Store';
 export default function HomeScreen(props) {
+  const { dispatch } = useContext(Store);
   const styles = useStyles();
+  const selectHandler = (paymentType) => {
+    setPaymentType(dispatch, paymentType);
+    if (paymentType === 'Pay here') {
+      props.history.push('/payment');
+    } else {
+      props.history.push('/complete');
+    }
+  };
   return (
     <Box className={[styles.root, styles.navy]}>
       <Box className={[styles.main, styles.center]}>
@@ -26,10 +37,10 @@ export default function HomeScreen(props) {
         </Typography>
         <Box className={styles.cards}>
           <Card className={[styles.card, styles.space]}>
-            <CardActionArea onClick={() => props.history.push('/payment')}>
+            <CardActionArea onClick={() => selectHandler('Pay here')}>
               <CardMedia
                 component="img"
-                alt="Eat in"
+                alt="Pay here"
                 image="/images/payhere.png"
                 className={styles.media}
               />
@@ -46,10 +57,10 @@ export default function HomeScreen(props) {
             </CardActionArea>
           </Card>
           <Card className={[styles.card, styles.space]}>
-            <CardActionArea onClick={() => props.history.push('/complete')}>
+            <CardActionArea onClick={() => selectHandler('At counter')}>
               <CardMedia
                 component="img"
-                alt="Take Out"
+                alt="At counter"
                 image="/images/atcounter.png"
                 className={styles.media}
               />

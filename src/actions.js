@@ -9,6 +9,11 @@ import {
   ORDER_ADD_ITEM,
   ORDER_REMOVE_ITEM,
   ORDER_CLEAR,
+  ORDER_SET_TYPE,
+  ORDER_SET_PAYMENT_TYPE,
+  ORDER_CREATE_REQUEST,
+  ORDER_CREATE_SUCCESS,
+  ORDER_CREATE_FAIL,
 } from './constants';
 
 export const listCategories = async (dispatch) => {
@@ -43,6 +48,37 @@ export const listProducts = async (dispatch, categoryName = '') => {
   }
 };
 
+export const createOrder = async (dispatch, order) => {
+  dispatch({ type: ORDER_CREATE_REQUEST });
+  try {
+    const { data } = await Axios.post('/api/orders', order);
+    dispatch({
+      type: ORDER_CREATE_SUCCESS,
+      payload: data,
+    });
+    dispatch({
+      type: ORDER_CLEAR,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_CREATE_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const setOrderType = async (dispatch, orderType) => {
+  return dispatch({
+    type: ORDER_SET_TYPE,
+    payload: orderType,
+  });
+};
+export const setPaymentType = async (dispatch, paymentType) => {
+  return dispatch({
+    type: ORDER_SET_PAYMENT_TYPE,
+    payload: paymentType,
+  });
+};
 export const clearOrder = async (dispatch) => {
   return dispatch({
     type: ORDER_CLEAR,
@@ -60,18 +96,4 @@ export const removeFromOrder = async (dispatch, item) => {
     type: ORDER_REMOVE_ITEM,
     payload: item,
   });
-};
-
-export const toggleFavAction = (product, state, dispatch) => {
-  const productInFavourites = state.favourites.includes(product);
-  let dispatchObj = {
-    type: 'ADD_FAV',
-    payload: product,
-  };
-  if (productInFavourites)
-    dispatchObj = {
-      type: 'REMOVE_FAV',
-      payload: state.favourites.filter((fav) => fav.id !== product.id),
-    };
-  return dispatch(dispatchObj);
 };

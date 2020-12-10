@@ -15,20 +15,18 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { useParams } from 'react-router-dom';
 import { useStyles } from '../styles';
 import Logo from '../components/Logo';
 export default function ReviewScreen(props) {
   const styles = useStyles();
   const { state, dispatch } = useContext(Store);
-  const { orderItems } = state.order;
-  const itemsCount = orderItems.reduce((a, c) => a + c.quantity, 0);
-  const itemsPrice = orderItems.reduce((a, c) => a + c.quantity * c.price, 0);
-  const taxPrice = Math.round(0.15 * itemsPrice * 100) / 100;
-
-  const totalPrice = Math.round((itemsPrice + taxPrice) * 100) / 100;
-  const { orderType } = useParams();
-
+  const {
+    orderItems,
+    itemsCount,
+    totalPrice,
+    taxPrice,
+    orderType,
+  } = state.order;
   const [quantity, setQuantity] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState({});
@@ -99,7 +97,7 @@ export default function ReviewScreen(props) {
               size="large"
               className={styles.largeButton}
             >
-              {orderItems.find((x) => x.id === product.id)
+              {orderItems.find((x) => x.name === product.name)
                 ? 'Remove From Order'
                 : 'Cancel'}
             </Button>
@@ -123,7 +121,7 @@ export default function ReviewScreen(props) {
             variant="h3"
             component="h3"
           >
-            Review my {orderType === 'takeout' ? 'Take out' : 'Eat in'} order
+            Review my {orderType} order
           </Typography>
         </Box>
 
@@ -180,7 +178,7 @@ export default function ReviewScreen(props) {
           <Box className={[styles.row, styles.around]}>
             <Button
               onClick={() => {
-                props.history.push(`/order/${orderType}`);
+                props.history.push(`/order`);
               }}
               variant="contained"
               color="primary"

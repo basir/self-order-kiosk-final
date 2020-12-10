@@ -45,16 +45,8 @@ function App() {
           <Paper>
             <Route path="/" component={HomeScreen} exact></Route>
             <Route path="/choose" component={ChooseScreen} exact></Route>
-            <Route
-              path="/order/:orderType/:categoryName?"
-              component={OrderScreen}
-              exact
-            ></Route>
-            <Route
-              path="/review/:orderType"
-              component={ReviewScreen}
-              exact
-            ></Route>
+            <Route path="/order" component={OrderScreen} exact></Route>
+            <Route path="/review" component={ReviewScreen} exact></Route>
             <Route
               path="/select-payment"
               component={SelectPaymentScreen}

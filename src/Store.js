@@ -11,6 +11,11 @@ import {
   PRODUCT_LIST_SUCCESS,
   ORDER_REMOVE_ITEM,
   ORDER_CLEAR,
+  ORDER_SET_TYPE,
+  ORDER_SET_PAYMENT_TYPE,
+  ORDER_CREATE_FAIL,
+  ORDER_CREATE_SUCCESS,
+  ORDER_CREATE_REQUEST,
 } from './constants';
 
 export const Store = createContext();
@@ -18,13 +23,29 @@ export const Store = createContext();
 const initialState = {
   categoryList: { loading: true },
   productList: { loading: true },
-  order: { orderItems: [] },
-
-  favourites: [],
+  order: {
+    orderItems: [],
+    orderType: 'Eat in',
+    paymentType: 'Pay here',
+    taxPrice: 0,
+    totalPrice: 0,
+    itemsCount: 0,
+  },
+  orderCreate: { loading: true },
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case ORDER_SET_TYPE:
+      return {
+        ...state,
+        order: { ...state.order, orderType: action.payload },
+      };
+    case ORDER_SET_PAYMENT_TYPE:
+      return {
+        ...state,
+        order: { ...state.order, paymentType: action.payload },
+      };
     case CATEGORY_LIST_REQUEST:
       return { ...state, categoryList: { loading: true } };
     case CATEGORY_LIST_SUCCESS:
@@ -49,40 +70,77 @@ function reducer(state, action) {
         ...state,
         productList: { loading: false, error: action.payload },
       };
+    case ORDER_CREATE_REQUEST:
+      return { ...state, orderCreate: { loading: true } };
+    case ORDER_CREATE_SUCCESS:
+      return {
+        ...state,
+        orderCreate: { loading: false, newOrder: action.payload },
+      };
+    case ORDER_CREATE_FAIL:
+      return {
+        ...state,
+        orderCreate: { loading: false, error: action.payload },
+      };
     case ORDER_ADD_ITEM: {
       const item = action.payload;
-      const existItem = state.order.orderItems.find((x) => x.id === item.id);
-      if (existItem) {
-        return {
-          ...state,
-          order: {
-            orderItems: state.order.orderItems.map((x) =>
-              x.id === existItem.id ? item : x
-            ),
-          },
-        };
-      }
+      const existItem = state.order.orderItems.find(
+        (x) => x.name === item.name
+      );
+      const orderItems = existItem
+        ? state.order.orderItems.map((x) =>
+            x.name === existItem.name ? item : x
+          )
+        : [...state.order.orderItems, item];
+
+      const itemsCount = orderItems.reduce((a, c) => a + c.quantity, 0);
+      const itemsPrice = orderItems.reduce(
+        (a, c) => a + c.quantity * c.price,
+        0
+      );
+      const taxPrice = Math.round(0.15 * itemsPrice * 100) / 100;
+      const totalPrice = Math.round((itemsPrice + taxPrice) * 100) / 100;
       return {
         ...state,
         order: {
-          orderItems: [...state.order.orderItems, item],
+          ...state.order,
+          orderItems,
+          taxPrice,
+          totalPrice,
+          itemsCount,
         },
       };
     }
     case ORDER_REMOVE_ITEM:
+      const orderItems = state.order.orderItems.filter(
+        (x) => x.name !== action.payload.name
+      );
+      const itemsCount = orderItems.reduce((a, c) => a + c.quantity, 0);
+      const itemsPrice = orderItems.reduce(
+        (a, c) => a + c.quantity * c.price,
+        0
+      );
+      const taxPrice = Math.round(0.15 * itemsPrice * 100) / 100;
+      const totalPrice = Math.round((itemsPrice + taxPrice) * 100) / 100;
       return {
         ...state,
         order: {
-          orderItems: state.order.orderItems.filter(
-            (x) => x.id !== action.payload.id
-          ),
+          ...state.order,
+          orderItems,
+          taxPrice,
+          totalPrice,
+          itemsCount,
         },
       };
+
     case ORDER_CLEAR:
       return {
         ...state,
         order: {
           orderItems: [],
+          taxPrice: 0,
+          totalPrice: 0,
+          itemsCount: 0,
         },
       };
 
