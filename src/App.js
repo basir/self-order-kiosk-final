@@ -4,16 +4,20 @@ import {
   Paper,
   ThemeProvider,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useContext } from 'react';
+import { Store } from './Store';
 import { Route, BrowserRouter } from 'react-router-dom';
 import ChooseScreen from './screens/ChooseScreen';
 import HomeScreen from './screens/HomeScreen';
 import OrderScreen from './screens/OrderScreen';
+import QueueScreen from './screens/QueueScreen';
 import { createMuiTheme } from '@material-ui/core';
 import ReviewScreen from './screens/ReviewScreen';
 import PaymentScreen from './screens/PaymentScreen';
+import AdminScreen from './screens/AdminScreen';
 import SelectPaymentScreen from './screens/SelectPaymentScreen';
 import CompleteOrderScreen from './screens/CompleteOrderScreen';
+import { Helmet } from 'react-helmet';
 
 const theme = createMuiTheme({
   typography: {
@@ -37,13 +41,21 @@ const theme = createMuiTheme({
   },
 });
 function App() {
+  const { state } = useContext(Store);
+
   return (
     <BrowserRouter>
+      <Helmet>
+        <title>Self-Order Kiosk</title>
+      </Helmet>
+
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container maxWidth="sm">
+        <Container maxWidth={state.widthScreen ? 'lg' : 'sm'}>
           <Paper>
             <Route path="/" component={HomeScreen} exact></Route>
+            <Route path="/admin" component={AdminScreen} exact></Route>
+            <Route path="/queue" component={QueueScreen} exact></Route>
             <Route path="/choose" component={ChooseScreen} exact></Route>
             <Route path="/order" component={OrderScreen} exact></Route>
             <Route path="/review" component={ReviewScreen} exact></Route>

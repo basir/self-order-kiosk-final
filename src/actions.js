@@ -14,6 +14,13 @@ import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
+  ORDER_QUEUE_LIST_REQUEST,
+  ORDER_QUEUE_LIST_SUCCESS,
+  ORDER_QUEUE_LIST_FAIL,
+  SCREEN_SET_WIDTH,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_FAIL,
 } from './constants';
 
 export const listCategories = async (dispatch) => {
@@ -96,4 +103,38 @@ export const removeFromOrder = async (dispatch, item) => {
     type: ORDER_REMOVE_ITEM,
     payload: item,
   });
+};
+
+export const listQueue = async (dispatch) => {
+  dispatch({ type: ORDER_QUEUE_LIST_REQUEST });
+  try {
+    const { data } = await Axios.get(`/api/orders/queue`);
+    dispatch({ type: SCREEN_SET_WIDTH });
+    return dispatch({
+      type: ORDER_QUEUE_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    return dispatch({
+      type: ORDER_QUEUE_LIST_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const listOrders = async (dispatch) => {
+  dispatch({ type: ORDER_LIST_REQUEST });
+  try {
+    const { data } = await Axios.get(`/api/orders`);
+    dispatch({ type: SCREEN_SET_WIDTH });
+    return dispatch({
+      type: ORDER_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    return dispatch({
+      type: ORDER_LIST_FAIL,
+      payload: error.message,
+    });
+  }
 };

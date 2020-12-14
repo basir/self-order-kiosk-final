@@ -60,9 +60,11 @@ const Order = mongoose.model(
       number: { type: Number, default: 0 },
       orderType: String,
       paymentType: String,
-      isPaid: Boolean,
-      isReady: Boolean,
-      isDelivered: Boolean,
+      isPaid: { type: Boolean, default: false },
+      isReady: { type: Boolean, default: false },
+      inProgress: { type: Boolean, default: true },
+      isCanceled: { type: Boolean, default: false },
+      isDelivered: { type: Boolean, default: false },
       totalPrice: Number,
       taxPrice: Number,
       orderItems: [
@@ -94,8 +96,36 @@ app.post('/api/orders', async (req, res) => {
   res.send(order);
 });
 app.get('/api/orders', async (req, res) => {
-  const orders = await Order.find({});
+  const orders = await Order.find({ isDelivered: false, isCanceled: false });
   res.send(orders);
+});
+app.put('/api/orders/:id', async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    if (req.body.action === 'ready') {
+      order.isReady = true;
+      order.inProgress = false;
+    } else if (req.body.action === 'deliver') {
+      order.isDelivered = true;
+    } else if (req.body.action === 'cancel') {
+      order.isCanceled = true;
+    }
+    await order.save();
+    res.send({ message: 'Done' });
+  } else {
+    req.status(404).message('Order not found');
+  }
+});
+app.get('/api/orders/queue', async (req, res) => {
+  const inProgressOrders = await Order.find(
+    { inProgress: true, isCanceled: false },
+    'number'
+  );
+  const servingOrders = await Order.find(
+    { isReady: true, isDelivered: false },
+    'number'
+  );
+  res.send({ inProgressOrders, servingOrders });
 });
 app.delete('/api/orders/:id', async (req, res) => {
   const order = await Order.findByIdAndDelete(req.params.id);

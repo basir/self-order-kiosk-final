@@ -22,10 +22,10 @@ export const useStyles = makeStyles((theme) => ({
     color: '#ffffff',
   },
   navy: {
-    backgroundColor: '#002984',
+    backgroundColor: '#003080',
   },
   green: {
-    backgroundColor: '#00ae24',
+    backgroundColor: '#00b020',
   },
   footer: {},
   // choose screen
@@ -36,7 +36,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   // order screen
   red: {
-    backgroundColor: '#ff1744',
+    backgroundColor: '#ff2040',
     color: '#ffffff',
   },
   bordered: {
@@ -79,4 +79,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   card: { margin: 10 },
   media: { width: 200 },
+  ready: {
+    backgroundColor: '#003080',
+    color: '#ffffff',
+    marginTop: 0,
+  },
+  processing: {
+    backgroundColor: '#404040',
+    color: '#ffffff',
+    marginTop: 0,
+  },
 }));

@@ -1,6 +1,5 @@
 import React, { createContext, useReducer } from 'react';
 import useReducerWithThunk from 'use-reducer-thunk';
-//import useReducerWithThunk from './useReducerThunk';
 import {
   ORDER_ADD_ITEM,
   CATEGORY_LIST_FAIL,
@@ -16,11 +15,21 @@ import {
   ORDER_CREATE_FAIL,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_REQUEST,
+  SCREEN_SET_WIDTH,
+  ORDER_QUEUE_LIST_REQUEST,
+  ORDER_QUEUE_LIST_SUCCESS,
+  ORDER_QUEUE_LIST_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_FAIL,
 } from './constants';
 
 export const Store = createContext();
 
 const initialState = {
+  widthScreen: false,
+  orderList: { loading: true },
+  queueList: { loading: true },
   categoryList: { loading: true },
   productList: { loading: true },
   order: {
@@ -36,6 +45,11 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case SCREEN_SET_WIDTH:
+      return {
+        ...state,
+        widthScreen: true,
+      };
     case ORDER_SET_TYPE:
       return {
         ...state,
@@ -69,6 +83,30 @@ function reducer(state, action) {
       return {
         ...state,
         productList: { loading: false, error: action.payload },
+      };
+    case ORDER_QUEUE_LIST_REQUEST:
+      return { ...state, queueList: { loading: true } };
+    case ORDER_QUEUE_LIST_SUCCESS:
+      return {
+        ...state,
+        queueList: { loading: false, queue: action.payload },
+      };
+    case ORDER_QUEUE_LIST_FAIL:
+      return {
+        ...state,
+        queueList: { loading: false, error: action.payload },
+      };
+    case ORDER_LIST_REQUEST:
+      return { ...state, orderList: { loading: true } };
+    case ORDER_LIST_SUCCESS:
+      return {
+        ...state,
+        orderList: { loading: false, orders: action.payload },
+      };
+    case ORDER_LIST_FAIL:
+      return {
+        ...state,
+        orderList: { loading: false, error: action.payload },
       };
     case ORDER_CREATE_REQUEST:
       return { ...state, orderCreate: { loading: true } };
@@ -150,11 +188,8 @@ function reducer(state, action) {
 }
 
 export function StoreProvider(props) {
-  const [state, dispatch] = useReducerWithThunk(
-    reducer,
-    initialState,
-    'example'
-  );
+  const [state, dispatch] = useReducer(reducer, initialState);
+  //const [state, dispatch] = useReducerWithThunk(reducer, initialState, 'example');
 
   const value = { state, dispatch };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
