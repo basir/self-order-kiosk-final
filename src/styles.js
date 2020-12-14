@@ -62,10 +62,10 @@ export const useStyles = makeStyles((theme) => ({
     width: 250,
   },
   largeInput: {
-    width: 60,
-    padding: 0,
-    fontSize: 35,
-    textAlign: 'center',
+    width: '60px!important',
+    padding: '0!important',
+    fontSize: '35px!important',
+    textAlign: 'center!important',
   },
 
   logo: {

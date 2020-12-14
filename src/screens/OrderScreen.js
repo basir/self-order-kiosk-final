@@ -107,6 +107,12 @@ export default function OrderScreen(props) {
             </Button>
             <TextField
               inputProps={{ className: styles.largeInput }}
+              InputProps={{
+                bar: true,
+                inputProps: {
+                  className: styles.largeInput,
+                },
+              }}
               className={styles.largeNumber}
               type="number"
               variant="filled"
