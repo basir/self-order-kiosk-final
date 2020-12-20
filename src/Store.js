@@ -2,14 +2,14 @@ import React, { createContext, useReducer } from 'react';
 import useReducerWithThunk from 'use-reducer-thunk';
 import {
   ORDER_ADD_ITEM,
+  ORDER_REMOVE_ITEM,
+  ORDER_CLEAR,
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
-  ORDER_REMOVE_ITEM,
-  ORDER_CLEAR,
   ORDER_SET_TYPE,
   ORDER_SET_PAYMENT_TYPE,
   ORDER_CREATE_FAIL,
