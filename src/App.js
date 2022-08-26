@@ -11,7 +11,7 @@ import ChooseScreen from './screens/ChooseScreen';
 import HomeScreen from './screens/HomeScreen';
 import OrderScreen from './screens/OrderScreen';
 import QueueScreen from './screens/QueueScreen';
-import { createMuiTheme } from '@material-ui/core';
+import { createTheme } from '@material-ui/core';
 import ReviewScreen from './screens/ReviewScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import AdminScreen from './screens/AdminScreen';
@@ -19,7 +19,7 @@ import SelectPaymentScreen from './screens/SelectPaymentScreen';
 import CompleteOrderScreen from './screens/CompleteOrderScreen';
 import { Helmet } from 'react-helmet';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     h1: { fontWeight: 'bold' },
     h2: {
